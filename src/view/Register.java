@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI;
+package view;
 
 /**
  *
- * @author Dell
+ * @author Gaurab
  */
 public class Register extends javax.swing.JFrame {
 
@@ -97,6 +97,11 @@ public class Register extends javax.swing.JFrame {
         logInButton.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         logInButton.setText("Log In");
         logInButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logInButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logInButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout containerPanelLayout = new javax.swing.GroupLayout(containerPanel);
         containerPanel.setLayout(containerPanelLayout);
@@ -166,6 +171,12 @@ public class Register extends javax.swing.JFrame {
     private void confirmPasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmPasswordFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_confirmPasswordFieldActionPerformed
+
+    private void logInButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logInButtonMouseClicked
+        // TODO add your handling code here:
+        new Login().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_logInButtonMouseClicked
 
     /**
      * @param args the command line arguments

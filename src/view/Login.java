@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI;
+package view;
 /**
  *
  * @author Gaurab
@@ -57,11 +57,6 @@ public class Login extends javax.swing.JFrame {
         emailInput.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
         emailInput.setBorder(passwordField.getBorder());
         emailInput.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        emailInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emailInputActionPerformed(evt);
-            }
-        });
 
         passwordLabel.setFont(new java.awt.Font("Trebuchet MS", 1, 26)); // NOI18N
         passwordLabel.setForeground(new java.awt.Color(227, 225, 218));
@@ -81,11 +76,12 @@ public class Login extends javax.swing.JFrame {
         registerButton.setBackground(new java.awt.Color(204, 204, 204));
         registerButton.setText("Register");
         registerButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        registerButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerButtonActionPerformed(evt);
+        registerButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                registerButtonMouseClicked(evt);
             }
         });
+
 
         signuptext.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
         signuptext.setForeground(new java.awt.Color(227, 225, 218));
@@ -147,13 +143,11 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void emailInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailInputActionPerformed
+    private void registerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerButtonMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_emailInputActionPerformed
-
-    private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_registerButtonActionPerformed
+        new Register().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_registerButtonMouseEntered
 
     /**
      * @param args the command line arguments
