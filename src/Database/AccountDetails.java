@@ -1,50 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Database;
 
 import java.sql.*;
 
-/**
- *
- * @author Gaurab
- */
 public class AccountDetails {
+    private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306/";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "9848688463";
+    private static final String DATABASE = "accountDetails";
 
-    Statement stmt;
-    Connection conn;
-
-    public static void main(String[] Args) {
-
+    public static void main(String[] args) {
+        AccountDetails details = new AccountDetails();
+        details.makeConnection();
     }
 
     public void makeConnection() {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "9848688463"); Statement stmt = conn.createStatement();) {
-            stmt.executeUpdate("create database if not exists accountDetails;");
-            stmt.executeUpdate("use accountDetails;");
-            stmt.executeUpdate("create table if not exists Data(email varchar(255),username varchar(255),password varchar(255));");
-
+        try (Connection conn = DriverManager.getConnection(CONNECTION_URL, USERNAME, PASSWORD);
+                Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS " + DATABASE);
+            stmt.executeUpdate("USE " + DATABASE);
+            stmt.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS Data (email VARCHAR(255), username VARCHAR(255), password VARCHAR(255))");
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
     public boolean insertCredentials(String email, String user, String password) {
         boolean taken = false;
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "9848688463");
-            stmt = conn.createStatement();
-            stmt.executeUpdate("use accountDetails");
-            ResultSet rs = stmt.executeQuery("select * from Data where email = \'" + email + "';");
-            if (rs.next()) {
-                taken = true;
-            } else {
-                stmt.executeUpdate("insert into Data values(\'" + email + "',\'" + user + "',\'" + password + "');");
+        String sql = "SELECT * FROM Data WHERE email = ?";
+        try (Connection conn = DriverManager.getConnection(CONNECTION_URL + DATABASE, USERNAME, PASSWORD);
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    taken = true;
+                } else {
+                    String insertSql = "INSERT INTO Data (email, username, password) VALUES (?, ?, ?)";
+                    try (PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
+                        insertPstmt.setString(1, email);
+                        insertPstmt.setString(2, user);
+                        insertPstmt.setString(3, password);
+                        insertPstmt.executeUpdate();
+                    }
+                }
             }
-
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return taken;
     }
@@ -53,17 +54,27 @@ public class AccountDetails {
         boolean emailValidity = false;
         boolean passValidity = false;
 
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "9848688463");
-            stmt = conn.createStatement();
-            stmt.executeUpdate("use accountDetails");
-            ResultSet validEmail = stmt.executeQuery("select * from Data where email = \'" + email + "'");
-            emailValidity = validEmail.next();
-            ResultSet pass = stmt.executeQuery("select * from Data where password = \'" + password + "'");
-            passValidity = pass.next();
+        String emailSql = "SELECT * FROM Data WHERE email = ?";
+        String passSql = "SELECT * FROM Data WHERE password = ?";
+
+        try (Connection conn = DriverManager.getConnection(CONNECTION_URL + DATABASE, USERNAME, PASSWORD);
+                PreparedStatement emailPstmt = conn.prepareStatement(emailSql);
+                PreparedStatement passPstmt = conn.prepareStatement(passSql)) {
+
+            emailPstmt.setString(1, email);
+            try (ResultSet validEmail = emailPstmt.executeQuery()) {
+                emailValidity = validEmail.next();
+            }
+
+            passPstmt.setString(1, password);
+            try (ResultSet pass = passPstmt.executeQuery()) {
+                passValidity = pass.next();
+            }
+
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
+
         if (!emailValidity) {
             return 0;
         } else if (!passValidity) {
@@ -71,6 +82,5 @@ public class AccountDetails {
         } else {
             return 1;
         }
-
     }
 }
