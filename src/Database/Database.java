@@ -3,6 +3,7 @@ package Database;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+// This defines the methods which are further defined in the mysql connection class
 public interface Database {
     Connection openConnection();
 
