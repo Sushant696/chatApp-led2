@@ -23,5 +23,8 @@ public class MVCPatternDemo {
 
         // Update the view with new data
         controller.updateView(); // View displays the updated student details
+        System.out.println("SANIN");
     }
+    
+    
 }
