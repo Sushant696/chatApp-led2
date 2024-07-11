@@ -2,20 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 /**
  *
  * @author sushant
  */
 
-package DAO.Chat;
+package Model;
 
-import Model.Chat;
-import java.util.List;
+public class User {
+    private int userId;
+    private String username;
+    private String password;
 
- interface ChatDAO {
-    List<Chat> getAllChats();
-    Chat getChatById(int id);
-    void addChat(Chat chat);
-    void updateChat(Chat chat);
-    void deleteChat(int id);
+    // Todo: Constructors, getters, setters
 }

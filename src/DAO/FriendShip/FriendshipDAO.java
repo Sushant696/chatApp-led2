@@ -2,20 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+package DAO.FriendShip;
+
 /**
  *
  * @author sushant
  */
-
-package DAO.Chat;
-
-import Model.Chat;
+import Model.User;
 import java.util.List;
 
- interface ChatDAO {
-    List<Chat> getAllChats();
-    Chat getChatById(int id);
-    void addChat(Chat chat);
-    void updateChat(Chat chat);
-    void deleteChat(int id);
+interface FriendshipDAO {
+        void sendFriendRequest(int userId, int friendId);
+    void respondToFriendRequest(int friendshipId, String status);
+    List<User> getFriendsList(int userId);
 }

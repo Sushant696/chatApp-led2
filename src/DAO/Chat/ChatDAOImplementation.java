@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLChatDAO implements ChatDAO {
+public class ChatDAOImplementation implements ChatDAO {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/your_database";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
 
-    @Override
+    @Override   
     public List<Chat> getAllChats() {
         List<Chat> chats = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
