@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class MySqlConnection implements Database {
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "password";
+    private static final String PASSWORD = "newpassword";
     private static final String DATABASE = "demo";  
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306/";
 
