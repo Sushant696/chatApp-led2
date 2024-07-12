@@ -10,6 +10,7 @@ import Model.User;
  *
  * @author sushant
  */
+import DAO.User.UserDAO;
 public class UserController {
     private UserDAO userDAO;
 

@@ -3,13 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/DAO/User/UserDAOImplementation.java</file>
-            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/Controller/FriendshipController.java</file>
-            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/DAO/FriendShip/FriendshipDAO.java</file>
-            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/DAO/User/UserDAO.java</file>
-            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/DAO/Message/MessageDAO.java</file>
-            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/Controller/UserController.java</file>
-            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/Controller/MessageController.java</file>
+            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/Database/AccountDetails.java</file>
+            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/Database/Database.java</file>
+            <file>file:/home/sushant/LED%20G8/chatApp-led2/src/Database/MySqlConnection.java</file>
         </group>
     </open-files>
 </project-private>

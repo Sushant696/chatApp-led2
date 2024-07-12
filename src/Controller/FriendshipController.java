@@ -10,7 +10,7 @@ package Controller;
  */
 
 
-import DAO.FriendShip.FriendshipDAOImplementation;
+import DAO.FriendShip.FriendshipDAO;
 import Model.User;
 import java.util.List;
 
