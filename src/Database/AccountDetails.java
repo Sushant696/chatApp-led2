@@ -5,13 +5,13 @@ import java.sql.*;
 public class AccountDetails {
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306/";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "9848688463";
+    private static final String PASSWORD = "newpassword";
     private static final String DATABASE = "accountDetails";
 
     public static void main(String[] args) {
         AccountDetails details = new AccountDetails();
         details.makeConnection();
-    }
+    }   
 
     public void makeConnection() {
         try (Connection conn = DriverManager.getConnection(CONNECTION_URL, USERNAME, PASSWORD);
