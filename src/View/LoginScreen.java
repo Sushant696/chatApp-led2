@@ -5,7 +5,7 @@
 
 package View;
 
-import Database.AccountDetails;
+import Database.MySqlConnection;
 import javax.swing.JOptionPane;
 
 /**
@@ -186,17 +186,18 @@ public class LoginScreen extends javax.swing.JFrame {
         this.dispose();
     }// GEN-LAST:event_registerButtonMouseClicked
 
-    private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_loginButtonMouseClicked
+        private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_loginButtonMouseClicked
         // TODO add your handling code here:
-        AccountDetails ad = new AccountDetails();
+        MySqlConnection ad = new MySqlConnection();
         ad.makeConnection();
         String e = emailInput.getText();
         String p = passwordField.getText();
         int b = ad.checkCredentials(e, p);
         switch (b) {
             case 1:
-                JOptionPane.showMessageDialog(rootPane, "Sucessfully logged in. \nOpening chat application");
-                this.dispose();
+//             JOptionPane.showMessageDialog(rootPane, "Successfully logged in. \nOpening chat application");
+                new Home().setVisible(true);  // Open the Home window
+                this.dispose(); 
                 break;
             case 0:
                 JOptionPane.showMessageDialog(rootPane, "Invalid Email");
