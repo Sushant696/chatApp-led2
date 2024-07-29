@@ -11,6 +11,7 @@ public class MySqlConnection {
     public static void main(String[] args) {
         MySqlConnection details = new MySqlConnection();
         details.makeConnection();
+        details.insertCredentials("test@example.com", "testuser", "testpass");
     }   
 
     public void makeConnection() {
@@ -20,6 +21,7 @@ public class MySqlConnection {
             stmt.executeUpdate("USE " + DATABASE);
             stmt.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS Data (email VARCHAR(255), username VARCHAR(255), password VARCHAR(255))");
+            System.out.println("Database and table created successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -27,7 +29,9 @@ public class MySqlConnection {
 
     public Connection openConnection() {
         try {
-            return DriverManager.getConnection(CONNECTION_URL + DATABASE, USERNAME, PASSWORD);
+            Connection conn = DriverManager.getConnection(CONNECTION_URL + DATABASE, USERNAME, PASSWORD);
+            System.out.println("Connection established successfully.");
+            return conn;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -38,6 +42,7 @@ public class MySqlConnection {
         if (conn != null) {
             try {
                 conn.close();
+                System.out.println("Connection closed successfully.");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -64,19 +69,32 @@ public class MySqlConnection {
     public boolean insertCredentials(String email, String user, String password) {
         boolean taken = false;
         String sql = "SELECT * FROM Data WHERE email = ?";
+        System.out.println("Attempting to insert credentials...");
+
         try (Connection conn = openConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            if (conn == null) {
+                System.err.println("Connection is null. Unable to insert credentials.");
+                return taken;
+            }
+
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     taken = true;
+                    System.out.println("Email already taken.");
                 } else {
                     String insertSql = "INSERT INTO Data (email, username, password) VALUES (?, ?, ?)";
                     try (PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
                         insertPstmt.setString(1, email);
                         insertPstmt.setString(2, user);
                         insertPstmt.setString(3, password);
-                        insertPstmt.executeUpdate();
+                        int rowsAffected = insertPstmt.executeUpdate();
+                        if (rowsAffected > 0) {
+                            System.out.println("Inserted new user: " + user);
+                        } else {
+                            System.err.println("Failed to insert user: " + user);
+                        }
                     }
                 }
             }
@@ -96,6 +114,11 @@ public class MySqlConnection {
         try (Connection conn = openConnection();
                 PreparedStatement emailPstmt = conn.prepareStatement(emailSql);
                 PreparedStatement passPstmt = conn.prepareStatement(passSql)) {
+
+            if (conn == null) {
+                System.err.println("Connection is null. Unable to check credentials.");
+                return 0;
+            }
 
             emailPstmt.setString(1, email);
             try (ResultSet validEmail = emailPstmt.executeQuery()) {
