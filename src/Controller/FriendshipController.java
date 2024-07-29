@@ -14,7 +14,7 @@ import DAO.FriendShip.FriendshipDAO;
 import Model.User;
 import java.util.List;
 
-public class FriendshipController {
+public class FriendshipController { 
     private FriendshipDAO friendshipDAO;
 
     public FriendshipController(FriendshipDAO friendshipDAO) {

@@ -9,7 +9,6 @@ package App;
  * @author sushant
  */
 
-
     
 import View.LoginScreen;
 import View.RegisterScreen;

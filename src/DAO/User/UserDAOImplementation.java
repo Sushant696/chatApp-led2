@@ -5,7 +5,6 @@ import Model.User;
 import java.sql.Connection;
 import java.sql.ResultSet;  
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,7 @@ public class UserDAOImplementation implements UserDAO {
 
     public UserDAOImplementation() {
         this.mySqlConnection = new MySqlConnection();
+        System.out.println("User DAO Implementation ran");
     }
 
     @Override

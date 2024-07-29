@@ -4,7 +4,7 @@
  */
 package View;
 
-import Database.AccountDetails;
+import Database.MySqlConnection;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -242,8 +242,8 @@ public class RegisterScreen extends javax.swing.JFrame {
         } else if (!confirmPassword.equals(password)) {
             JOptionPane.showMessageDialog(rootPane, "Incorrect Password");
         } else {
-            AccountDetails ad;
-            ad = new AccountDetails();
+            MySqlConnection ad;
+            ad = new MySqlConnection();
             ad.makeConnection();
             boolean ic = ad.insertCredentials(email, user, password);
             if (ic) {

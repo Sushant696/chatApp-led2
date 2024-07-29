@@ -25,7 +25,7 @@ public class UserController {
         if (userDAO.getUserByUsername(username) == null) {
             User user = new User();
             user.setUsername(username);
-            user.setPassword(password); // You should hash the password here
+            user.setPassword(password);
             userDAO.addUser(user);
         } else {
             System.out.println("Username already exists");
@@ -34,7 +34,7 @@ public class UserController {
 
     public User login(String username, String password) {
         User user = userDAO.getUserByUsername(username);
-        if (user != null && user.getPassword().equals(password)) { // You should hash the password here and compare
+        if (user != null && user.getPassword().equals(password)) {
             return user;
         }
         return null;
