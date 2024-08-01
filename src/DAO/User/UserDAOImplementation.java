@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImplementation implements UserDAO {
-    private MySqlConnection mySqlConnection;
+    final MySqlConnection mySqlConnection;
 
     public UserDAOImplementation() {
         this.mySqlConnection = new MySqlConnection();
