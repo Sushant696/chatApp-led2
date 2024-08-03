@@ -12,7 +12,7 @@ public class MySqlConnection {
         MySqlConnection details = new MySqlConnection();
         details.makeConnection();
         details.insertCredentials("test@example.com", "testuser", "testpass");
-    }   
+    }
 
     public void makeConnection() {
         try (Connection conn = DriverManager.getConnection(CONNECTION_URL, USERNAME, PASSWORD);
