@@ -5,6 +5,9 @@
 
 package View;
 
+import DAO.User.UserDAO;
+import DAO.User.UserDAOImplementation;
+import Model.User;
 import Database.MySqlConnection;
 import javax.swing.JOptionPane;
 
@@ -18,7 +21,9 @@ public class LoginScreen extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    final UserDAO userDAO;
     public LoginScreen() {
+         userDAO = new UserDAOImplementation();
         initComponents();
     }
 
@@ -29,7 +34,7 @@ public class LoginScreen extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // Code">
     private void initComponents() {
 
         containerPanel = new javax.swing.JPanel();
@@ -178,7 +183,7 @@ public class LoginScreen extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void registerButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_registerButtonMouseClicked
         // TODO add your handling code here:
@@ -186,7 +191,7 @@ public class LoginScreen extends javax.swing.JFrame {
         this.dispose();
     }// GEN-LAST:event_registerButtonMouseClicked
 
-        private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_loginButtonMouseClicked
+    private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_loginButtonMouseClicked
         // TODO add your handling code here:
         MySqlConnection ad = new MySqlConnection();
         ad.makeConnection();
@@ -195,9 +200,10 @@ public class LoginScreen extends javax.swing.JFrame {
         int b = ad.checkCredentials(e, p);
         switch (b) {
             case 1:
-//             JOptionPane.showMessageDialog(rootPane, "Successfully logged in. \nOpening chat application");
-                new Home().setVisible(true);  // Open the Home window
-                this.dispose(); 
+                // JOptionPane.showMessageDialog(rootPane, "Successfully logged in. \nOpening
+                // chat application");
+                new Home().setVisible(true); // Open the Home window
+                this.dispose();
                 break;
             case 0:
                 JOptionPane.showMessageDialog(rootPane, "Invalid Email");
@@ -221,6 +227,18 @@ public class LoginScreen extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    
+        private void login(String email, String password) {
+        User user = userDAO.getUserByUsername(email);
+        if (user != null && user.getPassword().equals(password)) {
+            JOptionPane.showMessageDialog(rootPane, "Successfully logged in. \nOpening chat application");
+            new Home().setVisible(true);  // Open the Home window
+            this.dispose(); 
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Invalid Email or Password");
+        }
+    }
+        
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
@@ -262,7 +280,7 @@ public class LoginScreen extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private javax.swing.JLabel backgroundImage;
     private javax.swing.JPanel containerPanel;
     private javax.swing.JLabel emailAddress_label;
@@ -274,5 +292,5 @@ public class LoginScreen extends javax.swing.JFrame {
     private javax.swing.JButton registerButton;
     private javax.swing.JLabel showButton;
     private javax.swing.JLabel signuptext;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration
 }
