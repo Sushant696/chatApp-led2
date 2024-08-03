@@ -8,7 +8,6 @@
  * @author sushant
  */
 
-
 package DAO.Message;
 
 import Model.Message;
@@ -40,34 +39,33 @@ public class MessageDAOImplementation implements MessageDAO {
             e.printStackTrace();
         }
     }
-@Override
-public List<Message> getAllMessages() {
-    List<Message> messages = new ArrayList<>();
-    String query = "SELECT * FROM messages";
-    try (PreparedStatement stmt = connection.prepareStatement(query);
-         ResultSet rs = stmt.executeQuery()) {
 
-        while (rs.next()) {
-            int messageId = rs.getInt("messageId");
-            int senderId = rs.getInt("senderId");
-            int recipientId = rs.getInt("recipientId");
-            String content = rs.getString("content");
-            java.sql.Timestamp sentTime = rs.getTimestamp("sentTime");
+    @Override
+    public List<Message> getAllMessages() {
+        List<Message> messages = new ArrayList<>();
+        String query = "SELECT * FROM messages";
+        try (PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
 
-            // Debugging output
-            System.out.println("Retrieved Message: ID=" + messageId + ", SenderID=" + senderId +
-                ", RecipientID=" + recipientId + ", Content=" + content + ", SentTime=" + sentTime);
+            while (rs.next()) {
+                int messageId = rs.getInt("messageId");
+                int senderId = rs.getInt("senderId");
+                int recipientId = rs.getInt("recipientId");
+                String content = rs.getString("content");
+                java.sql.Timestamp sentTime = rs.getTimestamp("sentTime");
 
-            Message message = new Message(messageId, senderId, recipientId, content, new Date(sentTime.getTime()));
-            messages.add(message);
+                // Debugging output
+                System.out.println("Retrieved Message: ID=" + messageId + ", SenderID=" + senderId +
+                        ", RecipientID=" + recipientId + ", Content=" + content + ", SentTime=" + sentTime);
+
+                Message message = new Message(messageId, senderId, recipientId, content, new Date(sentTime.getTime()));
+                messages.add(message);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return messages;
     }
-    return messages;
-}
-
-
 
     @Override
     public List<Message> getMessagesByUserId(int recipientId) {
@@ -83,7 +81,8 @@ public List<Message> getAllMessages() {
                     String content = rs.getString("content");
                     java.sql.Timestamp sentTime = rs.getTimestamp("sentTime");
 
-                    Message message = new Message(messageId, senderId, recipientIdFromDb, content, new Date(sentTime.getTime()));
+                    Message message = new Message(messageId, senderId, recipientIdFromDb, content,
+                            new Date(sentTime.getTime()));
                     messages.add(message);
                 }
             }
@@ -92,6 +91,4 @@ public List<Message> getAllMessages() {
         }
         return messages;
     }
-}
-
 }
