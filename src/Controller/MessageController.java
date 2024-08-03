@@ -21,6 +21,10 @@ public class MessageController {
     }
 
     public List<Message> getMessagesByRecipient(int recipientId) {
-        return messageDAO.getMessagesByRecipient(recipientId);
+        return messageDAO.getMessagesByUserId(recipientId);
+    }
+
+    public List<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
     }
 }
