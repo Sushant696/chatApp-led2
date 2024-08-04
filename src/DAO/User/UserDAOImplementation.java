@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImplementation implements UserDAO {
-    private MySqlConnection mySqlConnection;
+    final MySqlConnection mySqlConnection;
 
     public UserDAOImplementation() {
         this.mySqlConnection = new MySqlConnection();
@@ -81,23 +81,35 @@ public class UserDAOImplementation implements UserDAO {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        Connection conn = mySqlConnection.openConnection();
-        String query = "SELECT * FROM users";
-        ResultSet rs = mySqlConnection.runQuery(conn, query);
-        List<User> users = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
-                users.add(user);
+public List<User> getAllUsers() {
+    Connection conn = mySqlConnection.openConnection();
+    String query = "SELECT * FROM data";
+    ResultSet rs = null;
+    List<User> users = new ArrayList<>();
+    
+    try {
+        rs = mySqlConnection.runQuery(conn, query);
+        while (rs.next()) {
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            users.add(user);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        // Ensure ResultSet and Connection are closed in the finally block
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         mySqlConnection.closeConnection(conn);
-        return users;
     }
+    return users;
+}
+
 }

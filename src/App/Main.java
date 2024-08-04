@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package App;
 
 /**
@@ -11,7 +8,7 @@ package App;
 
     
 import View.LoginScreen;
-import View.RegisterScreen;
+//import View.RegisterScreen;
 
 public class Main {
     public static void main(String[] args) {

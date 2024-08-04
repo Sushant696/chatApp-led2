@@ -14,5 +14,6 @@ import java.util.List;
 
 public interface MessageDAO {
     void sendMessage(Message message);
-    List<Message> getMessagesByRecipient(int recipientId);
-}   
+    List<Message> getMessagesByUserId(int recipientId); // Changed parameter name to match implementation
+    List<Message> getAllMessages();
+}
