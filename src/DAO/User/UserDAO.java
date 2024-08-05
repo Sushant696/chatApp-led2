@@ -8,14 +8,23 @@
  * @author sushant
  */
 package DAO.User;
+
 import Model.User;
 import java.util.List;
 
 public interface UserDAO {
     void addUser(User user);
+
     void updateUser(User user);
+
     void deleteUser(int userId);
+
     User getUserById(int userId);
+
     User getUserByUsername(String username);
+
+    User getUserByEmail(String email);
+
     List<User> getAllUsers();
+
 }

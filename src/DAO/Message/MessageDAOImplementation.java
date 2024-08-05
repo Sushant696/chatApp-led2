@@ -28,7 +28,7 @@ public class MessageDAOImplementation implements MessageDAO {
 
     @Override
     public void sendMessage(Message message) {
-        String query = "INSERT INTO messages (senderId, recipientId, content, sentTime) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Message (senderId, recipientId, content, sentTime) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, message.getSenderId());
             stmt.setInt(2, message.getRecipientId());
@@ -43,7 +43,7 @@ public class MessageDAOImplementation implements MessageDAO {
     @Override
     public List<Message> getAllMessages() {
         List<Message> messages = new ArrayList<>();
-        String query = "SELECT * FROM messages";
+        String query = "SELECT * FROM Message";
         try (PreparedStatement stmt = connection.prepareStatement(query);
                 ResultSet rs = stmt.executeQuery()) {
 
@@ -70,7 +70,7 @@ public class MessageDAOImplementation implements MessageDAO {
     @Override
     public List<Message> getMessagesByUserId(int recipientId) {
         List<Message> messages = new ArrayList<>();
-        String query = "SELECT * FROM messages WHERE recipientId = ? ORDER BY sentTime";
+        String query = "SELECT * FROM Message WHERE recipientId = ? ORDER BY sentTime";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, recipientId);
             try (ResultSet rs = stmt.executeQuery()) {

@@ -6,12 +6,12 @@ public class MySqlConnection {
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306/";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Sqlroot";
-    private static final String DATABASE = "accountDetails";
+    private static final String DATABASE = "ledDatabase";
 
     public static void main(String[] args) {
         MySqlConnection details = new MySqlConnection();
         details.makeConnection();
-        details.insertCredentials("test@example.com", "testuser", "testpass");
+        // details.insertCredentials("test@example.com", "testuser", "testpass");
     }
 
     public void makeConnection() {
@@ -20,7 +20,7 @@ public class MySqlConnection {
             stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS " + DATABASE);
             stmt.executeUpdate("USE " + DATABASE);
             stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS Data (email VARCHAR(255), username VARCHAR(255), password VARCHAR(255))");
+                    "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY , email VARCHAR(255), username VARCHAR(255), password VARCHAR(255))");
             System.out.println("Database and table created successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,9 +66,10 @@ public class MySqlConnection {
         }
     }
 
+    @SuppressWarnings("unused")
     public boolean insertCredentials(String email, String user, String password) {
         boolean taken = false;
-        String sql = "SELECT * FROM Data WHERE email = ?";
+        String sql = "SELECT * FROM users WHERE email = ?";
         System.out.println("Attempting to insert credentials...");
 
         try (Connection conn = openConnection();
@@ -84,7 +85,7 @@ public class MySqlConnection {
                     taken = true;
                     System.out.println("Email already taken.");
                 } else {
-                    String insertSql = "INSERT INTO Data (email, username, password) VALUES (?, ?, ?)";
+                    String insertSql = "INSERT INTO users (email, username, password) VALUES (?, ?, ?)";
                     try (PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
                         insertPstmt.setString(1, email);
                         insertPstmt.setString(2, user);
@@ -104,12 +105,13 @@ public class MySqlConnection {
         return taken;
     }
 
+    @SuppressWarnings("unused")
     public int checkCredentials(String email, String password) {
         boolean emailValidity = false;
         boolean passValidity = false;
 
-        String emailSql = "SELECT * FROM Data WHERE email = ?";
-        String passSql = "SELECT * FROM Data WHERE password = ?";
+        String emailSql = "SELECT * FROM users WHERE email = ?";
+        String passSql = "SELECT * FROM users WHERE password = ?";
 
         try (Connection conn = openConnection();
                 PreparedStatement emailPstmt = conn.prepareStatement(emailSql);
