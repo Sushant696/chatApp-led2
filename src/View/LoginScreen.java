@@ -22,8 +22,9 @@ public class LoginScreen extends javax.swing.JFrame {
      * Creates new form Login
      */
     final UserDAO userDAO;
+
     public LoginScreen() {
-         userDAO = new UserDAOImplementation();
+        userDAO = new UserDAOImplementation();
         initComponents();
     }
 
@@ -191,28 +192,18 @@ public class LoginScreen extends javax.swing.JFrame {
         this.dispose();
     }// GEN-LAST:event_registerButtonMouseClicked
 
-    private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_loginButtonMouseClicked
-        // TODO add your handling code here:
-        MySqlConnection ad = new MySqlConnection();
-        ad.makeConnection();
-        String e = emailInput.getText();
-        String p = passwordField.getText();
-        int b = ad.checkCredentials(e, p);
-        switch (b) {
-            case 1:
-                // JOptionPane.showMessageDialog(rootPane, "Successfully logged in. \nOpening
-                // chat application");
-                new Home().setVisible(true); // Open the Home window
-                this.dispose();
-                break;
-            case 0:
-                JOptionPane.showMessageDialog(rootPane, "Invalid Email");
-                break;
-            default:
-                JOptionPane.showMessageDialog(rootPane, "Wrong Password");
-                break;
+    private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {
+        String email = emailInput.getText();
+        String password = new String(passwordField.getPassword());
+
+        User user = userDAO.getUserByEmail(email);
+        if (user != null && user.getPassword().equals(password)) {
+            new Home(email).setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Invalid Email or Password");
         }
-    }// GEN-LAST:event_loginButtonMouseClicked
+    }
 
     private void showButtonMouseReleased(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_showButtonMouseReleased
         // TODO add your handling code here:
@@ -227,18 +218,19 @@ public class LoginScreen extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    
-        private void login(String email, String password) {
+
+    @SuppressWarnings("unused")
+    private void login(String email, String password) {
         User user = userDAO.getUserByUsername(email);
         if (user != null && user.getPassword().equals(password)) {
             JOptionPane.showMessageDialog(rootPane, "Successfully logged in. \nOpening chat application");
-            new Home().setVisible(true);  // Open the Home window
-            this.dispose(); 
+            new Home(email).setVisible(true); // Open the Home window
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(rootPane, "Invalid Email or Password");
         }
     }
-        
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code

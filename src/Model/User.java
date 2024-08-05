@@ -1,6 +1,4 @@
 
-
-
 /**
  *
  * @author sushant
@@ -8,17 +6,27 @@
 package Model;
 
 public class User {
-    private int id;
+    private String email;
     private String username;
     private String password;
 
-    // Getters and setters
+    private int id;
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    // Getters and setters
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
@@ -35,5 +43,15 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        User user = (User) o;
+        return id == user.id;
     }
 }
