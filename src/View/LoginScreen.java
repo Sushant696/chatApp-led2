@@ -9,7 +9,14 @@ import DAO.User.UserDAO;
 import DAO.User.UserDAOImplementation;
 import Model.User;
 import Database.MySqlConnection;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -198,10 +205,42 @@ public class LoginScreen extends javax.swing.JFrame {
 
         User user = userDAO.getUserByEmail(email);
         if (user != null && user.getPassword().equals(password)) {
-            new Home(email).setVisible(true);
-            this.dispose();
+            if (user.getPhoto() == null) {
+                new PhotoUploadScreen(email).setVisible(true);
+                this.dispose();
+            } else {
+                new Home(email).setVisible(true);
+                this.dispose();
+            }
         } else {
             JOptionPane.showMessageDialog(rootPane, "Invalid Email or Password");
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private void showPhotoUploadDialog(int userId) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try {
+                byte[] photoData = Files.readAllBytes(selectedFile.toPath());
+                if (userDAO.updateUserPhoto(userId, photoData)) {
+                    JOptionPane.showMessageDialog(this, "Photo uploaded successfully!");
+                    new Home(emailInput.getText()).setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to upload photo. Please try again.");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage());
+            }
+        } else {
+            // User cancelled photo upload, proceed to home screen
+            new Home(emailInput.getText()).setVisible(true);
+            this.dispose();
         }
     }
 

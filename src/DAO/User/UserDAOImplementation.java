@@ -3,6 +3,7 @@ package DAO.User;
 import Database.MySqlConnection;
 import Model.User;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -87,7 +88,7 @@ public class UserDAOImplementation implements UserDAO {
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
                     user = new User();
-                    // user.setId(rs.getInt("id"));
+                    user.setId(rs.getInt("id"));
                     user.setEmail(rs.getString("email"));
                     user.setUsername(rs.getString("username"));
                     user.setPassword(rs.getString("password"));
@@ -121,7 +122,7 @@ public class UserDAOImplementation implements UserDAO {
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
                     user = new User();
-                    // user.setId(rs.getInt("id"));
+                    user.setId(rs.getInt("id"));
                     user.setEmail(rs.getString("email"));
                     user.setUsername(rs.getString("username"));
                     user.setPassword(rs.getString("password"));
@@ -157,6 +158,7 @@ public class UserDAOImplementation implements UserDAO {
 
             while (rs.next()) {
                 User user = new User();
+                user.setId(rs.getInt("id"));
                 user.setEmail(rs.getString("email"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
@@ -198,9 +200,11 @@ public class UserDAOImplementation implements UserDAO {
                 if (rs.next()) {
                     user = new User();
                     // Populate the User object with data from the database
+                    user.setId(rs.getInt("id"));
                     user.setEmail(rs.getString("email"));
                     user.setUsername(rs.getString("username"));
                     user.setPassword(rs.getString("password"));
+                    user.setPhoto(rs.getBytes("photo"));
                 }
             }
         } catch (SQLException e) {
@@ -218,4 +222,91 @@ public class UserDAOImplementation implements UserDAO {
         return user;
     }
 
+    @Override
+    public boolean updateUserPhoto(int userId, byte[] photo) {
+        Connection conn = null;
+        try {
+            conn = mySqlConnection.openConnection();
+            String query = "UPDATE users SET photo = ? WHERE id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setBytes(1, photo);
+                pstmt.setInt(2, userId);
+                int rowsAffected = pstmt.executeUpdate();
+                System.out.println("Rows affected: " + rowsAffected);
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
+        } finally {
+            mySqlConnection.closeConnection(conn);
+        }
+        return false;
+    }
+
+    @Override
+    public byte[] getUserPhoto(int userId) {
+        Connection conn = null;
+        ResultSet rs = null;
+        try {
+            conn = mySqlConnection.openConnection();
+            String query = "SELECT photo FROM users WHERE id = ?";
+            System.out.println("Fetching photo for user ID: " + userId);
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setInt(1, userId);
+                rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    byte[] photoData = rs.getBytes("photo");
+                    System.out.println(
+                            "Photo data fetched: " + (photoData != null ? photoData.length + " bytes" : "null"));
+                    return photoData;
+                } else {
+                    System.out.println("No photo found for user ID: " + userId);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching photo for user ID: " + userId);
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            mySqlConnection.closeConnection(conn);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean hasUserUploadedPhoto(int userId) {
+        Connection conn = null;
+        ResultSet rs = null;
+        try {
+            conn = mySqlConnection.openConnection();
+            String query = "SELECT photo FROM users WHERE id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setInt(1, userId);
+                rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getBytes("photo") != null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            mySqlConnection.closeConnection(conn);
+        }
+        return false;
+    }
 }

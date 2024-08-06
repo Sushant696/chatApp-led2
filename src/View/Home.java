@@ -25,6 +25,7 @@ public class Home extends javax.swing.JFrame {
         private javax.swing.JTextField jTextField1;
         private javax.swing.JButton jButton1;
         private String email;
+        private JLabel userPhotoLabel;
 
         public Home(String email) {
                 initComponents();
@@ -37,7 +38,7 @@ public class Home extends javax.swing.JFrame {
                 displayMessages();
                 displayUsers();
                 displayCurrentUser();
-
+                displayUserPhoto();
                 setPreferredSize(new Dimension(1000, 700));
                 pack();
 
@@ -88,12 +89,36 @@ public class Home extends javax.swing.JFrame {
                 }
         }
 
+        private void displayUserPhoto() {
+                try {
+                        User currentUser = userDAO.getUserByEmail(this.email);
+                        System.out.println(currentUser + "current user");
+                        System.out.println(currentUser + "user");
+                        if (currentUser != null) {
+                                byte[] photoData = userDAO.getUserPhoto(currentUser.getId());
+
+                                if (photoData != null) {
+                                        ImageIcon icon = new ImageIcon(photoData);
+                                        Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                                        userPhotoLabel = new JLabel(new ImageIcon(img));
+                                        jPanel2.add(userPhotoLabel, BorderLayout.WEST);
+                                } else {
+                                        userPhotoLabel = new JLabel("No photo");
+                                        jPanel2.add(userPhotoLabel, BorderLayout.WEST);
+                                }
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error displaying user photo: " + e.getMessage());
+                }
+        }
+
         private void displayUsers() {
                 try {
-                        System.out.println("Displaying users...");
                         List<User> users = userDAO.getAllUsers();
                         System.out.println("Fetched " + users.size() + " users");
                         jPanel1.removeAll();
+                        jPanel1.setLayout(new BoxLayout(jPanel1, BoxLayout.Y_AXIS));
 
                         for (User user : users) {
                                 if (user.getEmail().equals(this.email)) {
@@ -101,11 +126,46 @@ public class Home extends javax.swing.JFrame {
                                         continue;
                                 }
 
+                                JPanel userPanel = new JPanel();
+                                userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.X_AXIS));
+                                userPanel.setBackground(new Color(220, 220, 220)); // Light gray background
+                                userPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Add some padding
+                                userPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align to the left
+
+                                // Fetch and display user photo
+                                byte[] photoData = userDAO.getUserPhoto(user.getId());
+                                JLabel photoLabel;
+                                if (photoData != null && photoData.length > 0) {
+                                        ImageIcon icon = new ImageIcon(photoData);
+                                        Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                                        photoLabel = new JLabel(new ImageIcon(img));
+                                } else {
+                                        photoLabel = new JLabel("No photo");
+                                }
+                                photoLabel.setPreferredSize(new Dimension(40, 40));
+                                userPanel.add(photoLabel);
+
+                                // Add gap between photo and username
+                                userPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+                                // Display username
                                 JLabel userLabel = new JLabel(user.getUsername());
                                 userLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-                                userLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-                                jPanel1.add(userLabel);
-                                System.out.println("Added user: " + user.getUsername());
+                                userPanel.add(userLabel);
+
+                                // Add glue to push everything to the left
+                                userPanel.add(Box.createHorizontalGlue());
+
+                                // Wrap userPanel in another panel to make it take full width
+                                JPanel wrapperPanel = new JPanel(new BorderLayout());
+                                wrapperPanel.setBackground(new Color(240, 240, 240)); // Slightly lighter gray for
+                                                                                      // separation
+                                wrapperPanel.add(userPanel, BorderLayout.CENTER);
+                                wrapperPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+                                                wrapperPanel.getPreferredSize().height));
+
+                                jPanel1.add(wrapperPanel);
+                                jPanel1.add(Box.createRigidArea(new Dimension(0, 5))); // Add space between user panels
                         }
 
                         jPanel1.revalidate();

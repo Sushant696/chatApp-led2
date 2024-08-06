@@ -23,8 +23,13 @@ public interface UserDAO {
 
     User getUserByUsername(String username);
 
+    byte[] getUserPhoto(int userId);
+
+    boolean hasUserUploadedPhoto(int userId);
+
+    boolean updateUserPhoto(int userId, byte[] photo);
+
     User getUserByEmail(String email);
 
     List<User> getAllUsers();
-
 }

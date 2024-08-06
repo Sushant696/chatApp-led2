@@ -20,7 +20,14 @@ public class MySqlConnection {
             stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS " + DATABASE);
             stmt.executeUpdate("USE " + DATABASE);
             stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY , email VARCHAR(255), username VARCHAR(255), password VARCHAR(255))");
+                    "CREATE TABLE IF NOT EXISTS users (\r\n" + //
+                            "    id INT AUTO_INCREMENT PRIMARY KEY,\r\n" + //
+                            "    email VARCHAR(255),\r\n" + //
+                            "    username VARCHAR(255),\r\n" + //
+                            "    password VARCHAR(255),\r\n" + //
+                            "    photo BLOB\r\n" + //
+                            ");\r\n" + //
+                            "");
             System.out.println("Database and table created successfully.");
         } catch (SQLException e) {
             e.printStackTrace();

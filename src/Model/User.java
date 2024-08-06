@@ -9,8 +9,16 @@ public class User {
     private String email;
     private String username;
     private String password;
-
+    private byte[] photo;
     private int id;
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
 
     public int getId() {
         return id;
@@ -53,5 +61,10 @@ public class User {
             return false;
         User user = (User) o;
         return id == user.id;
+    }
+
+    public void getPhoto(byte[] bytes) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPhoto'");
     }
 }
