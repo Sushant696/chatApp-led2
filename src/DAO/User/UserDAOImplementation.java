@@ -42,14 +42,12 @@ public class UserDAOImplementation implements UserDAO {
         Connection conn = null;
         try {
             conn = mySqlConnection.openConnection();
-            String query = "UPDATE users SET username=?, password=? WHERE id=?";
+            String query = "UPDATE users SET username=? WHERE id=?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, user.getUsername());
-                pstmt.setString(2, user.getPassword());
-                pstmt.setString(3, user.getEmail());
-                // user.setEmail(rs.getString("email"));
-
-                pstmt.executeUpdate();
+                pstmt.setInt(2, user.getId());
+                int rowsAffected = pstmt.executeUpdate();
+                System.out.println("Rows affected by update: " + rowsAffected);
             }
         } catch (SQLException e) {
             e.printStackTrace();
