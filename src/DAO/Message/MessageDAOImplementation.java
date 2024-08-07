@@ -91,4 +91,33 @@ public class MessageDAOImplementation implements MessageDAO {
         }
         return messages;
     }
+
+    // New method to get messages between two specific users
+    public List<Message> getMessagesBetweenUsers(int user1Id, int user2Id) {
+        List<Message> messages = new ArrayList<>();
+        String query = "SELECT * FROM Message WHERE (senderId = ? AND recipientId = ?) OR (senderId = ? AND recipientId = ?) ORDER BY sentTime";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, user1Id);
+            stmt.setInt(2, user2Id);
+            stmt.setInt(3, user2Id);
+            stmt.setInt(4, user1Id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int messageId = rs.getInt("messageId");
+                    int senderId = rs.getInt("senderId");
+                    int recipientId = rs.getInt("recipientId");
+                    String content = rs.getString("content");
+                    java.sql.Timestamp sentTime = rs.getTimestamp("sentTime");
+
+                    Message message = new Message(messageId, senderId, recipientId, content,
+                            new Date(sentTime.getTime()));
+                    messages.add(message);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return messages;
+    }
+
 }

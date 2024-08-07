@@ -1,13 +1,21 @@
 package View;
 
 import Controller.MessageController;
+import DAO.Message.MessageDAO;
 import DAO.Message.MessageDAOImplementation;
 import DAO.User.UserDAOImplementation;
 import Model.User;
+import sockets.ChatClient;
 import Model.Message;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
 import java.awt.*;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -24,28 +32,118 @@ public class Home extends javax.swing.JFrame {
         private javax.swing.JPanel jPanel5;
         private javax.swing.JTextField jTextField1;
         private javax.swing.JButton jButton1;
-        private String email;
         private JLabel userPhotoLabel;
+        private ChatClient chatClient;
+        private String email;
+        private String username;
+        private MessageDAO messageDAO;
+        private JTextPane chatArea;
+        private User selectedUser;
+        private JScrollPane chatScrollPane;
 
         public Home(String email) {
                 initComponents();
                 this.email = email;
                 jPanel1.setLayout(new BoxLayout(jPanel1, BoxLayout.Y_AXIS));
                 jPanel1.setPreferredSize(new Dimension(200, getHeight()));
+
+                // Initialize UserDAOImplementation
+                this.userDAO = new UserDAOImplementation();
+
+                // Fetch the username after initializing userDAO
+                User currentUser = this.userDAO.getUserByEmail(this.email);
+                if (currentUser != null) {
+                        this.username = currentUser.getUsername();
+                } else {
+                        // Handle the case when user is not found
+                        JOptionPane.showMessageDialog(this, "User not found for email: " + this.email);
+                        return;
+                }
+
+                // Initialize MessageDAOImplementation with a database connection
                 Connection connection = getConnection();
-                messageController = new MessageController(new MessageDAOImplementation(connection));
-                userDAO = new UserDAOImplementation();
-                displayMessages();
+                if (connection != null) {
+                        this.messageDAO = new MessageDAOImplementation(connection);
+                        this.messageController = new MessageController(this.messageDAO);
+                } else {
+                        JOptionPane.showMessageDialog(this, "Failed to establish database connection.");
+                        return;
+                }
+
                 displayUsers();
                 displayCurrentUser();
                 displayUserPhoto();
-                setPreferredSize(new Dimension(1000, 700));
+                // displayMessage();
+                setPreferredSize(new Dimension(860, 700));
                 pack();
+                chatClient = new ChatClient("localhost", 5000, username);
+                try {
+                        chatClient.connect();
+                        chatClient.setMessageHandler(this::handleIncomingMessage);
+                        chatClient.listenForMessages();
+                } catch (IOException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Failed to connect to chat server.");
+                }
+        }
 
+        private void handleIncomingMessage(String message) {
+                SwingUtilities.invokeLater(() -> {
+                        String[] parts = message.split(": ", 2);
+                        if (parts.length == 2) {
+                                String sender = parts[0];
+                                String content = parts[1];
+
+                                if (!sender.equals(this.username)) {
+                                        appendToChat(sender, content, false);
+                                }
+                        }
+                });
+        }
+
+        private void onUserSelected(User user) {
+                this.selectedUser = user;
+                displayChat();
+        }
+
+        private void displayChat() {
+                jPanel3.removeAll();
+
+                JLabel selectedUserLabel = new JLabel("Chat with " + selectedUser.getUsername());
+                selectedUserLabel.setHorizontalAlignment(JLabel.CENTER);
+                selectedUserLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+                chatArea = new JTextPane();
+                chatArea.setEditable(false);
+                chatScrollPane = new JScrollPane(chatArea);
+
+                jPanel3.setLayout(new BorderLayout());
+                jPanel3.add(selectedUserLabel, BorderLayout.NORTH);
+                jPanel3.add(chatScrollPane, BorderLayout.CENTER);
+
+                loadChatHistory();
+
+                jPanel3.revalidate();
+                jPanel3.repaint();
         }
 
         public Home() {
 
+        }
+
+        private void loadChatHistory() {
+                if (selectedUser == null)
+                        return;
+
+                User currentUser = userDAO.getUserByEmail(this.email);
+                List<Message> messages = messageController.getMessagesBetweenUsers(
+                                currentUser.getId(),
+                                selectedUser.getId());
+
+                chatArea.setText("");
+                for (Message message : messages) {
+                        displayMessage(message, currentUser);
+                }
         }
 
         private Connection getConnection() {
@@ -58,18 +156,44 @@ public class Home extends javax.swing.JFrame {
                 }
         }
 
-        private void displayMessages() {
-                List<Message> messages = messageController.getAllMessages();
-                jPanel3.removeAll();
-                for (Message message : messages) {
-                        String content = message.getContent() != null ? message.getContent() : "No content";
-                        String sentTime = message.getSentTime() != null ? message.getSentTime().toString() : "No time";
-                        JLabel label = new JLabel(content + " (" + sentTime + ")");
-                        jPanel3.add(label);
-                }
-                jPanel3.revalidate();
-                jPanel3.repaint();
+        private void displayMessage(Message message, User currentUser) {
+                String sender = (message.getSenderId() == currentUser.getId()) ? "You"
+                                : getUsernameById(message.getSenderId());
+                String content = message.getContent();
+                boolean isOwnMessage = message.getSenderId() == currentUser.getId();
+
+                appendToChat(sender, content, isOwnMessage);
         }
+
+        private void appendToChat(String sender, String content, boolean isOwnMessage) {
+                StyledDocument doc = chatArea.getStyledDocument();
+                SimpleAttributeSet keyWord = new SimpleAttributeSet();
+
+                if (!isOwnMessage) {
+                        StyleConstants.setForeground(keyWord, Color.BLUE);
+                } else {
+                        StyleConstants.setForeground(keyWord, Color.BLACK);
+                }
+
+                StyleConstants.setBold(keyWord, true);
+
+                try {
+                        doc.insertString(doc.getLength(), sender + ": ", keyWord);
+                        StyleConstants.setBold(keyWord, false);
+                        doc.insertString(doc.getLength(), content + "\n", keyWord);
+                } catch (BadLocationException e) {
+                        e.printStackTrace();
+                }
+        }
+
+        private String getUsernameById(int userId) {
+                User user = userDAO.getUserById(userId);
+                return user != null ? user.getUsername() : "Unknown User";
+        }
+
+        // public User getUserById(int userId) {
+        // User user = userDAO.
+        // }
 
         private void displayCurrentUser() {
                 try {
@@ -127,6 +251,13 @@ public class Home extends javax.swing.JFrame {
                                 }
 
                                 JPanel userPanel = new JPanel();
+
+                                userPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                                        public void mouseClicked(java.awt.event.MouseEvent evt) {
+                                                onUserSelected(user);
+                                        }
+                                });
+
                                 userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.X_AXIS));
                                 userPanel.setBackground(new Color(220, 220, 220)); // Light gray background
                                 userPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Add some padding
@@ -177,13 +308,37 @@ public class Home extends javax.swing.JFrame {
         }
 
         private void sendMessage() {
+                if (selectedUser == null) {
+                        JOptionPane.showMessageDialog(this, "Please select a user to chat with.");
+                        return;
+                }
+
                 String content = jTextField1.getText();
-                Message message = new Message(1, 2, content, new Date());
-                message.setSenderId(1); // Assuming logged-in user ID is 1
-                message.setRecipientId(2); // Assuming recipient ID is 2 for demo
-                messageController.sendMessage(message);
-                displayMessages();
-                jTextField1.setText("");
+                if (!content.isEmpty()) {
+                        User currentUser = this.userDAO.getUserByEmail(this.email);
+                        Message message = new Message(currentUser.getId(), selectedUser.getId(), content, new Date());
+                        messageDAO.sendMessage(message);
+
+                        // Display the message locally
+                        appendToChat("You", content, true);
+
+                        // Send the message to the server
+                        chatClient.sendMessage(content);
+
+                        jTextField1.setText("");
+                }
+        }
+
+        @SuppressWarnings("unused")
+        private void displayLocalMessage(Message message, User currentUser) {
+                String sender = "You";
+                chatArea.setText(chatArea.getText() + sender + ": " + message.getContent() + "\n");
+        }
+
+        @Override
+        public void dispose() {
+                chatClient.disconnect();
+                super.dispose();
         }
 
         @SuppressWarnings("unchecked")
@@ -195,6 +350,8 @@ public class Home extends javax.swing.JFrame {
                 jPanel5 = new javax.swing.JPanel();
                 jButton1 = new javax.swing.JButton();
                 jPanel3 = new javax.swing.JPanel();
+                jPanel3 = new javax.swing.JPanel();
+                jPanel3.setLayout(new BorderLayout());
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 

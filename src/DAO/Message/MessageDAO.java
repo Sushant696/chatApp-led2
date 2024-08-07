@@ -14,6 +14,10 @@ import java.util.List;
 
 public interface MessageDAO {
     void sendMessage(Message message);
-    List<Message> getMessagesByUserId(int recipientId); // Changed parameter name to match implementation
+
     List<Message> getAllMessages();
+
+    List<Message> getMessagesByUserId(int recipientId);
+
+    List<Message> getMessagesBetweenUsers(int user1Id, int user2Id);
 }

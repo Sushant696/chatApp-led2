@@ -27,4 +27,8 @@ public class MessageController {
     public List<Message> getAllMessages() {
         return messageDAO.getAllMessages();
     }
+
+    public List<Message> getMessagesBetweenUsers(int user1Id, int user2Id) {
+        return messageDAO.getMessagesBetweenUsers(user1Id, user2Id);
+    }
 }
