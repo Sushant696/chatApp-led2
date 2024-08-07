@@ -73,7 +73,6 @@ public class Home extends javax.swing.JFrame {
                 displayUsers();
                 displayCurrentUser();
                 displayUserPhoto();
-                // displayMessage();
                 setPreferredSize(new Dimension(860, 700));
                 pack();
                 chatClient = new ChatClient("localhost", 5000, username);
@@ -237,6 +236,15 @@ public class Home extends javax.swing.JFrame {
                 }
         }
 
+        private void logout() {
+                int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?",
+                                "Logout Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                        this.dispose(); // Close the current window
+                        new LoginScreen().setVisible(true); // Open the login window
+                }
+        }
+
         private void displayUsers() {
                 try {
                         List<User> users = userDAO.getAllUsers();
@@ -268,7 +276,7 @@ public class Home extends javax.swing.JFrame {
                                 JLabel photoLabel;
                                 if (photoData != null && photoData.length > 0) {
                                         ImageIcon icon = new ImageIcon(photoData);
-                                        Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                                        Image img = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
                                         photoLabel = new JLabel(new ImageIcon(img));
                                 } else {
                                         photoLabel = new JLabel("No photo");
@@ -277,7 +285,7 @@ public class Home extends javax.swing.JFrame {
                                 userPanel.add(photoLabel);
 
                                 // Add gap between photo and username
-                                userPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+                                userPanel.add(Box.createRigidArea(new Dimension(15, 0)));
 
                                 // Display username
                                 JLabel userLabel = new JLabel(user.getUsername());
@@ -290,14 +298,46 @@ public class Home extends javax.swing.JFrame {
                                 // Wrap userPanel in another panel to make it take full width
                                 JPanel wrapperPanel = new JPanel(new BorderLayout());
                                 wrapperPanel.setBackground(new Color(240, 240, 240)); // Slightly lighter gray for
-                                                                                      // separation
                                 wrapperPanel.add(userPanel, BorderLayout.CENTER);
                                 wrapperPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,
                                                 wrapperPanel.getPreferredSize().height));
 
                                 jPanel1.add(wrapperPanel);
-                                jPanel1.add(Box.createRigidArea(new Dimension(0, 5))); // Add space between user panels
+                                jPanel1.add(Box.createRigidArea(new Dimension(0, 1))); // Add space between user panels
                         }
+
+                        // Add vertical glue to push buttons to the bottom
+                        jPanel1.add(Box.createVerticalGlue());
+
+                        // Create a panel for buttons
+                        JPanel buttonPanel = new JPanel();
+                        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+                        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        // buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 1));
+
+                        // Add settings button
+                        JButton settingsButton = new JButton("Settings");
+                        settingsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        settingsButton.setMaximumSize(
+                                        new Dimension(Integer.MAX_VALUE, settingsButton.getPreferredSize().height));
+                        settingsButton.addActionListener(e -> openSettings());
+                        buttonPanel.add(settingsButton);
+
+                        // Add some vertical space between buttons
+                        buttonPanel.add(Box.createRigidArea(new Dimension(0, 3)));
+
+                        // Add logout button
+                        JButton logoutButton = new JButton("Logout");
+                        logoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        logoutButton.setMaximumSize(
+                                        new Dimension(Integer.MAX_VALUE, logoutButton.getPreferredSize().height));
+                        logoutButton.addActionListener(e -> logout());
+                        buttonPanel.add(logoutButton);
+                        // Add some vertical space below the logout button
+                        buttonPanel.add(Box.createRigidArea(new Dimension(0, 2)));
+
+                        // Add the button panel to jPanel1
+                        jPanel1.add(buttonPanel);
 
                         jPanel1.revalidate();
                         jPanel1.repaint();
@@ -305,6 +345,11 @@ public class Home extends javax.swing.JFrame {
                         e.printStackTrace();
                         JOptionPane.showMessageDialog(this, "Error displaying users: " + e.getMessage());
                 }
+        }
+
+        private void openSettings() {
+                SettingsView settingsView = new SettingsView(this.email);
+                settingsView.setVisible(true);
         }
 
         private void sendMessage() {
