@@ -42,10 +42,11 @@ public class UserDAOImplementation implements UserDAO {
         Connection conn = null;
         try {
             conn = mySqlConnection.openConnection();
-            String query = "UPDATE users SET username=? WHERE id=?";
+            String query = "UPDATE users SET username=?, email=? WHERE id=?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, user.getUsername());
-                pstmt.setInt(2, user.getId());
+                pstmt.setString(2, user.getEmail());
+                pstmt.setInt(3, user.getId());
                 int rowsAffected = pstmt.executeUpdate();
                 System.out.println("Rows affected by update: " + rowsAffected);
             }
@@ -197,7 +198,6 @@ public class UserDAOImplementation implements UserDAO {
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
                     user = new User();
-                    // Populate the User object with data from the database
                     user.setId(rs.getInt("id"));
                     user.setEmail(rs.getString("email"));
                     user.setUsername(rs.getString("username"));

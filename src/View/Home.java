@@ -7,6 +7,7 @@ import DAO.User.UserDAOImplementation;
 import Model.User;
 import sockets.ChatClient;
 import Model.Message;
+import View.UserProfileView;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -93,9 +94,8 @@ public class Home extends javax.swing.JFrame {
                                 String sender = parts[0];
                                 String content = parts[1];
 
-                                if (!sender.equals(this.username)) {
-                                        appendToChat(sender, content, false);
-                                }
+                                boolean isOwnMessage = sender.equals(this.username);
+                                appendToChat(sender, content, isOwnMessage);
                         }
                 });
         }
@@ -169,9 +169,13 @@ public class Home extends javax.swing.JFrame {
                 SimpleAttributeSet keyWord = new SimpleAttributeSet();
 
                 if (!isOwnMessage) {
+                        // Set the message to be displayed on the right side
                         StyleConstants.setForeground(keyWord, Color.BLUE);
+                        StyleConstants.setAlignment(keyWord, StyleConstants.ALIGN_RIGHT);
                 } else {
+                        // Set the message to be displayed on the left side
                         StyleConstants.setForeground(keyWord, Color.BLACK);
+                        StyleConstants.setAlignment(keyWord, StyleConstants.ALIGN_LEFT);
                 }
 
                 StyleConstants.setBold(keyWord, true);
@@ -230,6 +234,7 @@ public class Home extends javax.swing.JFrame {
                                         jPanel2.add(userPhotoLabel, BorderLayout.WEST);
                                 }
                         }
+
                 } catch (Exception e) {
                         e.printStackTrace();
                         JOptionPane.showMessageDialog(this, "Error displaying user photo: " + e.getMessage());
@@ -316,7 +321,7 @@ public class Home extends javax.swing.JFrame {
                         // buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 1));
 
                         // Add settings button
-                        JButton settingsButton = new JButton("Settings");
+                        JButton settingsButton = new JButton("View Profile");
                         settingsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                         settingsButton.setMaximumSize(
                                         new Dimension(Integer.MAX_VALUE, settingsButton.getPreferredSize().height));
@@ -347,9 +352,14 @@ public class Home extends javax.swing.JFrame {
                 }
         }
 
+        // private void openSettings() {
+        // UserProfileView UserProfileView = new UserProfileView(this.email);
+        // new UserProfileView(email).setVisible(true);
+        // }
+
         private void openSettings() {
-                SettingsView settingsView = new SettingsView(this.email);
-                settingsView.setVisible(true);
+                UserProfileView userProfileView = new UserProfileView(this.email, this.getHomeReference());
+                userProfileView.setVisible(true);
         }
 
         private void sendMessage() {
@@ -384,6 +394,10 @@ public class Home extends javax.swing.JFrame {
         public void dispose() {
                 chatClient.disconnect();
                 super.dispose();
+        }
+
+        public Home getHomeReference() {
+                return this;
         }
 
         @SuppressWarnings("unchecked")
