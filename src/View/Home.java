@@ -94,8 +94,11 @@ public class Home extends javax.swing.JFrame {
                                 String sender = parts[0];
                                 String content = parts[1];
 
-                                boolean isOwnMessage = sender.equals(this.username);
-                                appendToChat(sender, content, isOwnMessage);
+                                // Only display the message if it's not from the current user
+                                if (!sender.equals(this.username)) {
+                                        boolean isOwnMessage = false;
+                                        appendToChat(sender, content, isOwnMessage);
+                                }
                         }
                 });
         }
