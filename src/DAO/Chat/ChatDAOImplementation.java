@@ -1,7 +1,3 @@
-/**
- *
- * @author sushant
- */
 
 package DAO.Chat;
 

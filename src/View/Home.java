@@ -151,7 +151,7 @@ public class Home extends javax.swing.JFrame {
         private Connection getConnection() {
                 try {
                         return DriverManager.getConnection("jdbc:mysql://localhost:3306/leddatabase", "root",
-                                        "Sqlroot");
+                                        "9848688463");
                 } catch (SQLException e) {
                         e.printStackTrace();
                         return null;
@@ -197,10 +197,7 @@ public class Home extends javax.swing.JFrame {
                 return user != null ? user.getUsername() : "Unknown User";
         }
 
-        // public User getUserById(int userId) {
-        // User user = userDAO.
-        // }
-
+    
         private void displayCurrentUser() {
                 try {
                         User currentUser = userDAO.getUserByEmail(this.email); // Assuming a method exists in userDAO
@@ -355,10 +352,6 @@ public class Home extends javax.swing.JFrame {
                 }
         }
 
-        // private void openSettings() {
-        // UserProfileView UserProfileView = new UserProfileView(this.email);
-        // new UserProfileView(email).setVisible(true);
-        // }
 
         private void openSettings() {
                 UserProfileView userProfileView = new UserProfileView(this.email, this.getHomeReference());
