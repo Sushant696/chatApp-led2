@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
+import java.awt.Window;
+import javax.swing.SwingUtilities;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import DAO.User.UserDAOImplementation;
@@ -24,7 +26,7 @@ public class UserProfileView extends javax.swing.JFrame {
     public UserProfileView(String email, Home homeFrame) {
         this.email = email;
         this.userDAO = new UserDAOImplementation();
-        this.homeFrame = homeFrame;
+        this.homeFrame = homeFrame; // Make sure this line is present
         initComponents();
     }
 
@@ -91,14 +93,29 @@ public class UserProfileView extends javax.swing.JFrame {
         int confirm = JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to delete your account? This action cannot be undone.", "Delete Account",
                 JOptionPane.YES_NO_OPTION);
+
         if (confirm == JOptionPane.YES_OPTION) {
             User user = userDAO.getUserByEmail(email);
-            if (user != null) {
+            if (user != null)
                 userDAO.deleteUser(user.getId());
-                JOptionPane.showMessageDialog(this, "Your account has been deleted.");
-                this.dispose();
-                new LoginScreen().setVisible(true);
+            System.out.println("homescreen" + homeFrame);
+            // Close the UserProfileView frame
+            this.dispose();
+            homeFrame.dispose();
+            homeFrame.dispose();
+            homeFrame.dispose();
+
+            // Close the Home frame
+            if (homeFrame != null) {
+                homeFrame.dispose();
             }
+            homeFrame.dispose();
+
+            // Open the LoginScreen
+
+            SwingUtilities.invokeLater(() -> new LoginScreen().setVisible(true));
+        } else {
+            JOptionPane.showMessageDialog(this, "User not found for the given email.");
         }
     }
 }

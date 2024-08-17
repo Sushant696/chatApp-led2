@@ -5,11 +5,10 @@
         <group>
             <file>file:/S:/Collage%20Projects/chatApp-led2/src/View/LoginScreen.java</file>
             <file>file:/S:/Collage%20Projects/chatApp-led2/src/App/Main.java</file>
-            <file>file:/S:/Collage%20Projects/chatApp-led2/src/View/StudentView.java</file>
             <file>file:/S:/Collage%20Projects/chatApp-led2/src/View/RegisterScreen.java</file>
-            <file>file:/S:/Collage%20Projects/chatApp-led2/src/View/Settings.java</file>
             <file>file:/S:/Collage%20Projects/chatApp-led2/src/DAO/User/UserDAO.java</file>
             <file>file:/S:/Collage%20Projects/chatApp-led2/src/Database/Database.java</file>
+            <file>file:/S:/Collage%20Projects/chatApp-led2/src/View/UserProfileView.java</file>
             <file>file:/S:/Collage%20Projects/chatApp-led2/src/DAO/User/UserDAOImplementation.java</file>
             <file>file:/S:/Collage%20Projects/chatApp-led2/src/View/Home.java</file>
         </group>

@@ -1,0 +1,79 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "App.Main",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        },
+        {
+            "type": "java",
+            "name": "MySqlConnection",
+            "request": "launch",
+            "mainClass": "Database.MySqlConnection",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        },
+        {
+            "type": "java",
+            "name": "MVCPatternDemo",
+            "request": "launch",
+            "mainClass": "MVCPatternDemo",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        },
+        {
+            "type": "java",
+            "name": "DashboardScreen",
+            "request": "launch",
+            "mainClass": "View.DashboardScreen",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        },
+        {
+            "type": "java",
+            "name": "Home",
+            "request": "launch",
+            "mainClass": "View.Home",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        },
+        {
+            "type": "java",
+            "name": "LoginScreen",
+            "request": "launch",
+            "mainClass": "View.LoginScreen",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        },
+        {
+            "type": "java",
+            "name": "RegisterScreen",
+            "request": "launch",
+            "mainClass": "View.RegisterScreen",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        },
+        {
+            "type": "java",
+            "name": "JavaChatAppLed2",
+            "request": "launch",
+            "mainClass": "java.chatapp.led.pkg2.JavaChatAppLed2",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        },
+        {
+            "type": "java",
+            "name": "ChatServer",
+            "request": "launch",
+            "mainClass": "sockets.ChatServer",
+            "projectName": "chatApp-led2_ef8c3ecb"
+        }
+    ]
+}

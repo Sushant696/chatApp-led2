@@ -13,6 +13,7 @@ import java.nio.file.Files;
 public class PhotoUploadScreen extends JFrame {
     private final UserDAO userDAO;
     private final String email;
+    private JButton uploadPhotoButton;
     private JLabel photoLabel;
     private JButton uploadButton;
     private JButton skipButton;
@@ -25,6 +26,10 @@ public class PhotoUploadScreen extends JFrame {
 
     private void initComponents() {
         User user = userDAO.getUserByEmail(email);
+        uploadButton = new JButton("Upload Photo");
+        add(uploadButton);
+
+        uploadButton.addActionListener(e -> uploadPhoto());
 
         // Debugging statements
         System.out.println("User Retrieved: " + user);
@@ -78,33 +83,14 @@ public class PhotoUploadScreen extends JFrame {
             File selectedFile = fileChooser.getSelectedFile();
             try {
                 byte[] photoData = Files.readAllBytes(selectedFile.toPath());
-                User user = userDAO.getUserByEmail(email);
-                if (user == null) {
-                    JOptionPane.showMessageDialog(this, "User not found for email: " + email);
-                    return;
-                }
-
-                System.out.println("User ID: " + user.getId());
-                System.out.println("User Email: " + user.getEmail());
-                System.out.println("User Username: " + user.getUsername());
-                System.out.println("Photo data size: " + photoData.length + " bytes");
-
-                boolean updateSuccess = userDAO.updateUserPhoto(user.getId(), photoData);
-                System.out.println("Update success: " + updateSuccess);
-
-                if (updateSuccess) {
-                    ImageIcon icon = new ImageIcon(photoData);
-                    Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-                    photoLabel.setIcon(new ImageIcon(img));
-                    photoLabel.setText("");
+                User user = userDAO.getUserByEmail(this.email);
+                if (user != null) {
+                    userDAO.updateUserPhoto(user.getId(), photoData);
                     JOptionPane.showMessageDialog(this, "Photo uploaded successfully!");
-                    proceedToMainApp();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Failed to upload photo. Please try again.");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error uploading photo: " + ex.getMessage());
             }
         }
     }
