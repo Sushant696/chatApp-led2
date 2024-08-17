@@ -85,6 +85,30 @@ public class Home extends javax.swing.JFrame {
                         e.printStackTrace();
                         JOptionPane.showMessageDialog(this, "Failed to connect to chat server.");
                 }
+                addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                                closeAllWindows();
+                        }
+                });
+        }
+
+        private void logout() {
+                int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?",
+                                "Logout Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                        this.dispose(); // Close the current window
+                        new LoginScreen().setVisible(true); // Open the login window
+                }
+        }
+
+        private void closeAllWindows() {
+                chatClient.disconnect();
+                SwingUtilities.invokeLater(() -> {
+                        for (Window window : Window.getWindows()) {
+                                window.dispose();
+                        }
+                });
         }
 
         private void handleIncomingMessage(String message) {
@@ -197,17 +221,15 @@ public class Home extends javax.swing.JFrame {
                 return user != null ? user.getUsername() : "Unknown User";
         }
 
-    
         private void displayCurrentUser() {
                 try {
-                        User currentUser = userDAO.getUserByEmail(this.email); // Assuming a method exists in userDAO
+                        User currentUser = userDAO.getUserByEmail(this.email);
                         if (currentUser != null) {
                                 JLabel currentUserLabel = new JLabel("Logged in as: " + currentUser.getUsername() + " ("
                                                 + currentUser.getEmail() + ")");
                                 currentUserLabel.setFont(new Font("Arial", Font.BOLD, 16));
                                 currentUserLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-                                jPanel2.add(currentUserLabel, BorderLayout.NORTH); // Assuming jPanel2 is used for the
-                                                                                   // top panel
+                                jPanel2.add(currentUserLabel, BorderLayout.NORTH);
                                 System.out.println("Displayed current user: " + currentUser.getUsername());
                         }
                 } catch (Exception e) {
@@ -238,15 +260,6 @@ public class Home extends javax.swing.JFrame {
                 } catch (Exception e) {
                         e.printStackTrace();
                         JOptionPane.showMessageDialog(this, "Error displaying user photo: " + e.getMessage());
-                }
-        }
-
-        private void logout() {
-                int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?",
-                                "Logout Confirmation", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                        this.dispose(); // Close the current window
-                        new LoginScreen().setVisible(true); // Open the login window
                 }
         }
 
@@ -308,13 +321,12 @@ public class Home extends javax.swing.JFrame {
                                                 wrapperPanel.getPreferredSize().height));
 
                                 jPanel1.add(wrapperPanel);
-                                jPanel1.add(Box.createRigidArea(new Dimension(0, 1))); // Add space between user panels
+                                jPanel1.add(Box.createRigidArea(new Dimension(0, 1)));
                         }
 
                         // Add vertical glue to push buttons to the bottom
                         jPanel1.add(Box.createVerticalGlue());
 
-                        // Create a panel for buttons
                         JPanel buttonPanel = new JPanel();
                         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
                         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -352,9 +364,8 @@ public class Home extends javax.swing.JFrame {
                 }
         }
 
-
         private void openSettings() {
-                UserProfileView userProfileView = new UserProfileView(this.email, this.getHomeReference());
+                UserProfileView userProfileView = new UserProfileView(this.email, this);
                 userProfileView.setVisible(true);
         }
 
@@ -528,7 +539,6 @@ public class Home extends javax.swing.JFrame {
         }
 
         private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {
-                // No action needed for now
         }
 
         public static void main(String args[]) {

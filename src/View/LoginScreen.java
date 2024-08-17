@@ -14,7 +14,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-
 public class LoginScreen extends javax.swing.JFrame {
 
     final UserDAO userDAO;
@@ -24,7 +23,6 @@ public class LoginScreen extends javax.swing.JFrame {
         initComponents();
     }
 
-  
     @SuppressWarnings("unchecked")
 
     private void initComponents() {
@@ -49,31 +47,31 @@ public class LoginScreen extends javax.swing.JFrame {
 
         containerPanel.setBackground(new java.awt.Color(54, 52, 51));
 
-        emailAddress_label.setFont(new java.awt.Font("Trebuchet MS", 1, 26)); 
+        emailAddress_label.setFont(new java.awt.Font("Trebuchet MS", 1, 26));
         emailAddress_label.setForeground(new java.awt.Color(227, 225, 218));
         emailAddress_label.setText("Email Address");
         emailAddress_label.setToolTipText("Email Address");
 
-        greetingLabel.setFont(new java.awt.Font("Trebuchet MS", 1, 36)); 
+        greetingLabel.setFont(new java.awt.Font("Trebuchet MS", 1, 36));
         greetingLabel.setForeground(new java.awt.Color(227, 225, 218));
         greetingLabel.setText("Welcome Back!!");
         greetingLabel.setToolTipText("");
 
         emailInput.setBackground(new java.awt.Color(204, 204, 204));
-        emailInput.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); 
+        emailInput.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18));
         emailInput.setBorder(passwordField.getBorder());
         emailInput.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
-        passwordLabel.setFont(new java.awt.Font("Trebuchet MS", 1, 26)); 
+        passwordLabel.setFont(new java.awt.Font("Trebuchet MS", 1, 26));
         passwordLabel.setForeground(new java.awt.Color(227, 225, 218));
         passwordLabel.setText("Password");
 
         passwordField.setBackground(new java.awt.Color(204, 204, 204));
-        passwordField.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); 
+        passwordField.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18));
         passwordField.setToolTipText("");
 
         loginButton.setBackground(new java.awt.Color(38, 94, 237));
-        loginButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); 
+        loginButton.setFont(new java.awt.Font("Segoe UI", 1, 18));
         loginButton.setForeground(new java.awt.Color(255, 255, 255));
         loginButton.setText("Log In");
         loginButton.setToolTipText("Button to get into main app");
@@ -93,11 +91,11 @@ public class LoginScreen extends javax.swing.JFrame {
             }
         });
 
-        signuptext.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); 
+        signuptext.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18));
         signuptext.setForeground(new java.awt.Color(227, 225, 218));
         signuptext.setText("New here?");
 
-        showButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Components/eye-3-48.png"))); 
+        showButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Components/eye-3-48.png")));
         showButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 showButtonMousePressed(evt);
@@ -169,7 +167,7 @@ public class LoginScreen extends javax.swing.JFrame {
 
         getContentPane().add(containerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 50, 480, 440));
 
-        backgroundImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Components/background.png"))); 
+        backgroundImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Components/background.png")));
         backgroundImage.setToolTipText("backgroundImage");
         getContentPane().add(backgroundImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 530));
 
@@ -221,7 +219,7 @@ public class LoginScreen extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage());
             }
         } else {
-            // User cancelled photo upload, proceed to home screen
+            // User cancelled photo upload, proceed to
             new Home(emailInput.getText()).setVisible(true);
             this.dispose();
         }
@@ -235,7 +233,6 @@ public class LoginScreen extends javax.swing.JFrame {
         passwordField.setEchoChar((char) 0);
     }
 
-  
     @SuppressWarnings("unused")
     private void login(String email, String password) {
         User user = userDAO.getUserByUsername(email);
