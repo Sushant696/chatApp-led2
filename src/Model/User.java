@@ -1,8 +1,4 @@
 
-/**
- *
- * @author sushant
- */
 package Model;
 
 public class User {
@@ -64,7 +60,6 @@ public class User {
     }
 
     public void getPhoto(byte[] bytes) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getPhoto'");
     }
 }

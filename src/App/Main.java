@@ -1,9 +1,4 @@
 
-/**
- *
- * @author sushant
- */
-
 package App;
 
 import View.LoginScreen;
